@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:http/http.dart' as http;
 
 class Dog {
   final String name;
@@ -19,17 +19,23 @@ class Dog {
       return;
     }
 
-    // This is how http calls are done in flutter:
-    HttpClient http = HttpClient();
     try {
       // Use darts Uri builder
-      var uri = Uri.http('dog.ceo', '/api/breeds/image/random');
-      var request = await http.getUrl(uri);
-      var response = await request.close();
-      var responseBody = await response.transform(utf8.decoder).join();
+      var response = await http.get('https://dog.ceo/api/breeds/image/random');
+
+      print(response);
+       if (response.statusCode == 200) {
+          // If server returns an OK response, parse the JSON
+          var responseBody = response.body;
+          imageUrl = json.decode(responseBody)['message'];
+        } else {
+          // If that response was not OK, throw an error.
+          throw Exception('Failed to load post');
+        }
+
       // The dog.ceo API returns a JSON object with a property
       // called 'message', which actually is the URL.
-      imageUrl = json.decode(responseBody)['message'];
+      
     } catch (exception) {
       print(exception);
     }
