@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dog_model.dart';
 import 'dog_list.dart';
+import 'new_dog_form.dart';
 
 
 void main() => runApp(MyApp());
@@ -41,12 +42,34 @@ class _MyHomePageState extends State<MyHomePage> {
       ..add(Dog('Herbert', 'Dallas, TX, USA', 'A Very Good Boy'))
       ..add(Dog('Buddy', 'North Pole, Earth', 'Self proclaimed human lover.'));
 
+    Future _showNewDogForm() async {
+      // push a new route like you did in the last section
+      Dog newDog = await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return AddDogFormPage();
+          },
+        ),
+      );
+      // A null check, to make sure that the user didn't abandon the form.
+      if (newDog != null) {
+        // Add a newDog to our mock dog array.
+        initialDoggos.add(newDog);
+      }
+    }
+
     @override
     Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
           backgroundColor: Colors.black87,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: _showNewDogForm,
+            ),
+          ],
         ),
         body: Container(
           // Add box decoration
