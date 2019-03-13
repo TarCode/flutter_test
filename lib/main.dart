@@ -43,23 +43,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
     @override
     Widget build(BuildContext context) {
-        /// Scaffold is the base for a page.
-        /// It gives an AppBar for the top,
-        /// Space for the main body, bottom navigation, and more.
-        return Scaffold(
-            /// App bar has a ton of functionality, but for now lets
-            /// just give it a color and a title.
-            appBar: AppBar(
-                /// Access this widgets properties with 'widget'
-                title: Text(widget.title),
-                backgroundColor: Colors.black87,
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+          backgroundColor: Colors.black87,
+        ),
+        body: Container(
+          // Add box decoration
+          decoration: BoxDecoration(
+            // Box decoration takes a gradient
+            gradient: LinearGradient(
+              // Where the linear gradient begins and ends
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              // Add one stop for each color. Stops should increase from 0 to 1
+              stops: [0.1, 0.5, 0.7, 0.9],
+              colors: [
+                // Colors are easy thanks to Flutter's Colors class.
+                Colors.indigo[800],
+                Colors.indigo[700],
+                Colors.indigo[600],
+                Colors.indigo[400],
+              ],
             ),
-            /// Container is a convenience widget that lets us style it's
-            /// children. It doesn't take up any space itself, so it
-            /// can be used as a placeholder in your code.
-            body: Container(
-              child: DogList(initialDoggos), // New code
-            ),
-        );
+          ),
+          child: Center(
+            child: DogList(initialDoggos),
+          ),
+        ),
+      );
     }
 }
