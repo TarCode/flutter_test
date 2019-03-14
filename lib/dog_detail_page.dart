@@ -4,6 +4,7 @@ import 'dog_model.dart';
 
 class DogDetailPage extends StatefulWidget {
   final Dog dog;
+  
 
   DogDetailPage(this.dog);
 
@@ -14,6 +15,14 @@ class DogDetailPage extends StatefulWidget {
 class _DogDetailPageState extends State<DogDetailPage> {
   // Arbitrary size choice for styles
   final double dogAvatarSize = 150.0;
+
+  double _sliderValue = 10.0;
+
+  void updateRating() {
+    setState(() => widget.dog.rating = _sliderValue.toInt());
+  }
+
+
 
   Widget get dogImage {
     // Containers define the size of its children.
@@ -49,7 +58,7 @@ class _DogDetailPageState extends State<DogDetailPage> {
         // This is how you add an image to a Container's background.
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: NetworkImage(widget.dog.imageUrl),
+          image: NetworkImage(widget.dog.imageUrl ?? ''),
         ),
       ),
     );
@@ -121,16 +130,92 @@ class _DogDetailPageState extends State<DogDetailPage> {
   // Aside:
   // It's often much easier to build UI if you break up your widgets the way I
   // have in this file rather than trying to have one massive build method
+  Widget get addYourRating {
+    return Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.symmetric(
+            vertical: 16.0,
+            horizontal: 16.0,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              // In a row, column, listview, etc., a Flexible widget is a wrapper
+              // that works much like CSS's flex-grow property.
+              //
+              // Any room left over in the main axis after
+              // the widgets are given their width
+              // will be distributed to all the flexible widgets
+              // at a ratio based on the flex property you pass in.
+              // Because this is the only Flexible widget,
+              // it will take up all the extra space.
+              //
+              // In other words, it will expand as much as it can until
+              // the all the space is taken up.
+              Flexible(
+                flex: 1,
+                // A slider, like many form elements, needs to know its
+                // own value and how to update that value.
+                //
+                // The slider will call onChanged whenever the value
+                // changes. But it will only repaint when its value property
+                // changes in the state using setState.
+                //
+                // The workflow is:
+                // 1. User drags the slider.
+                // 2. onChanged is called.
+                // 3. The callback in onChanged sets the sliderValue state.
+                // 4. Flutter repaints everything that relies on sliderValue,
+                // in this case, just the slider at its new value.
+                child: Slider(
+                  activeColor: Colors.indigoAccent,
+                  min: 0.0,
+                  max: 15.0,
+                  onChanged: (newRating) {
+                    setState(() => _sliderValue = newRating);
+                  },
+                  value: _sliderValue,
+                ),
+              ),
+
+              // This is the part that displays the value of the slider.
+              Container(
+                width: 50.0,
+                alignment: Alignment.center,
+                child: Text('${_sliderValue.toInt()}',
+                    style: Theme.of(context).textTheme.display1),
+              ),
+            ],
+          ),
+        ),
+        submitRatingButton,
+      ],
+    );
+  }
+
+  // A simple Raised Button that as of now doesn't do anything yet.
+  Widget get submitRatingButton {
+    return RaisedButton(
+      onPressed: updateRating,
+      child: Text('Submit'),
+      color: Colors.indigoAccent,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // This is a new page, so you need a new Scaffold!
     return Scaffold(
       backgroundColor: Colors.black87,
       appBar: AppBar(
         backgroundColor: Colors.black87,
         title: Text('Meet ${widget.dog.name}'),
       ),
-      body: dogProfile,
+      // Make the body a ListView that displays
+      // both the profile and the rating form.
+      body: ListView(
+        children: <Widget>[dogProfile, addYourRating],
+      ),
     );
   }
 }

@@ -83,10 +83,10 @@ class _MyHomePageState extends State<MyHomePage> {
               stops: [0.1, 0.5, 0.7, 0.9],
               colors: [
                 // Colors are easy thanks to Flutter's Colors class.
-                Colors.indigo[800],
-                Colors.indigo[700],
-                Colors.indigo[600],
-                Colors.indigo[400],
+                Colors.green[800],
+                Colors.green[700],
+                Colors.green[600],
+                Colors.green[400],
               ],
             ),
           ),
