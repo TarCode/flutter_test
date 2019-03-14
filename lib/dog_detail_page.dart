@@ -51,41 +51,44 @@ class _DogDetailPageState extends State<DogDetailPage> {
 
   Widget get dogImage {
     // Containers define the size of its children.
-    return Container(
-      height: dogAvatarSize,
-      width: dogAvatarSize,
-      // Use Box Decoration to make the image a circle
-      // and add an arbitrary shadow for styling.
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        // Like in CSS you often want to add multiple
-        // BoxShadows for the right look so the
-        // boxShadow property takes a list of BoxShadows.
-        boxShadow: [
-          const BoxShadow(
-              // just like CSS:
-              // it takes the same 4 properties
-              offset: const Offset(1.0, 2.0),
-              blurRadius: 2.0,
-              spreadRadius: -1.0,
-              color: const Color(0x33000000)),
-          const BoxShadow(
-              offset: const Offset(2.0, 1.0),
-              blurRadius: 3.0,
-              spreadRadius: 0.0,
-              color: const Color(0x24000000)),
-          const BoxShadow(
-              offset: const Offset(3.0, 1.0),
-              blurRadius: 4.0,
-              spreadRadius: 2.0,
-              color: const Color(0x1F000000)),
-        ],
-        // This is how you add an image to a Container's background.
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: NetworkImage(widget.dog.imageUrl ?? ''),
+    return Hero(
+      tag: widget.dog,
+      child: Container(
+        height: dogAvatarSize,
+        width: dogAvatarSize,
+        // Use Box Decoration to make the image a circle
+        // and add an arbitrary shadow for styling.
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          // Like in CSS you often want to add multiple
+          // BoxShadows for the right look so the
+          // boxShadow property takes a list of BoxShadows.
+          boxShadow: [
+            const BoxShadow(
+                // just like CSS:
+                // it takes the same 4 properties
+                offset: const Offset(1.0, 2.0),
+                blurRadius: 2.0,
+                spreadRadius: -1.0,
+                color: const Color(0x33000000)),
+            const BoxShadow(
+                offset: const Offset(2.0, 1.0),
+                blurRadius: 3.0,
+                spreadRadius: 0.0,
+                color: const Color(0x24000000)),
+            const BoxShadow(
+                offset: const Offset(3.0, 1.0),
+                blurRadius: 4.0,
+                spreadRadius: 2.0,
+                color: const Color(0x1F000000)),
+          ],
+          // This is how you add an image to a Container's background.
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: NetworkImage(widget.dog.imageUrl ?? ''),
+          ),
         ),
-      ),
+      )
     );
   }
 

@@ -34,34 +34,66 @@ class _DogCardState extends State<DogCard> {
       setState(() {
           renderUrl = dog.imageUrl;
       });
-    }
+   }
+
+   
 
    Widget get dogImage {
-    return Container(
-        // You can explicitly set heights and widths on Containers.
-        // Otherwise they take up as much space as their children.
-      width: 100.0,
-      height: 100.0,
-        // Decoration is a property that lets you style the container.
-        // It expects a BoxDecoration.
-      decoration: BoxDecoration(
-        // BoxDecorations have many possible properties.
-        // Using BoxShape with a background image is the
-        // easiest way to make a circle cropped avatar style image.
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          // Just like CSS's `imagesize` property.
-          fit: BoxFit.cover,
-          // A NetworkImage widget is a widget that
-          // takes a URL to an image.
-          // ImageProviders (such as NetworkImage) are ideal
-          // when your image needs to be loaded or can change.
-          // Use the null check to avoid an error.
-          image: NetworkImage(renderUrl ?? ''),
-        ),
+
+      var dogAvatar = Hero(
+    // Give your hero a tag.
+    //
+    // Flutter looks for two widgets on two different pages,
+    // and if they have the same tag it animates between them.
+        tag: dog,
+        child:  Container(
+            width: 100.0,
+            height: 100.0,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: NetworkImage(renderUrl ?? ''),
+              ),
+            ),
+          ),
+      );
+
+  // Placeholder is a static container the same size as the dog image.
+  var placeholder = Container(
+    width: 100.0,
+    height: 100.0,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Colors.black54, Colors.black, Colors.blueGrey[600]],
       ),
-    );
-  }
+    ),
+    alignment: Alignment.center,
+    child: Text(
+      'Loading...',
+      textAlign: TextAlign.center,
+    ),
+  );
+
+  // This is an animated widget built into flutter.
+  return AnimatedCrossFade(
+    // You pass it the starting widget and the ending widget.
+    firstChild: placeholder,
+    secondChild: dogAvatar,
+      // Then, you pass it a ternary that should be based on your state
+      //
+      // If renderUrl is null tell the widget to use the placeholder,
+      // otherwise use the dogAvatar.
+    crossFadeState: renderUrl == null
+        ? CrossFadeState.showFirst
+        : CrossFadeState.showSecond,
+     // Finally, pass in the amount of time the fade should take.
+    duration: Duration(milliseconds: 1000),
+  );
+}
 
   Widget get dogCard {
     // A new container
@@ -115,6 +147,7 @@ class _DogCardState extends State<DogCard> {
       ),
     );
   }
+  
 
   @override
   Widget build(BuildContext context) {
