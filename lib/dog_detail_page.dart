@@ -19,7 +19,32 @@ class _DogDetailPageState extends State<DogDetailPage> {
   double _sliderValue = 10.0;
 
   void updateRating() {
-    setState(() => widget.dog.rating = _sliderValue.toInt());
+    if (_sliderValue < 1 || _sliderValue > 10) {
+      _ratingErrorDialog();
+    } else {
+      setState(() => widget.dog.rating = _sliderValue.toInt());
+    }
+  }
+
+  Future<Null> _ratingErrorDialog() async {
+    // showDialog is a built-in Flutter method.
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error!'),
+          content: Text("Out range buddy."),
+          // This action uses the Navigator to dismiss the dialog.
+          // This is where you could return information if you wanted to.
+          actions: [
+            FlatButton(
+              child: Text('Try Again'),
+              onPressed: () => Navigator.of(context).pop(),
+            )
+          ],
+        );
+      },
+    );
   }
 
 
